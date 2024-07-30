@@ -1,0 +1,1 @@
+# Clase para la interfaz Gui en Tkinter
