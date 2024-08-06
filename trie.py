@@ -1,20 +1,32 @@
-# Clase del metodo trie
+class Node:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
 
 class Trie:
+    def __init__(self):
+        self.root = Node()
 
-    def __insertar(nodo, elemento):
-        #Este es el metodo de inserción recursiva
-        pass
+    def insert(self, word):
+        current = self.root
+        for char in word:
+            if char not in current.children:
+                current.children[char] = Node()
+            current = current.children[char]
+        current.is_end_of_word = True
 
-    def __contiene(nodo, elemento):
-        #Este es el método de prueba de membresía recursiva
-        pass
+    def search(self, word):
+        current = self.root
+        for char in word:
+            if char not in current.children:
+                return False
+            current = current.children[char]
+        return current.is_end_of_word
 
-    class NodoTrie: 
-        def __init__(self, elemento, siguiente=None, sigue=None):
-            self.elemento = elemento
-            self.siguiente = siguiente
-            self.sigue = sigue
-    
-    
-        
+    def starts_with(self, prefix):
+        current = self.root
+        for char in prefix:
+            if char not in current.children:
+                return False
+            current = current.children[char]
+        return True
