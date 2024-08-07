@@ -1,38 +1,49 @@
-class TrieNode:
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-        self.next_nodes = [None] * m
 
+# Clase HashTable 
 class HashTable:
+
+    # Constructor
     def __init__(self, m):
         self.m = m
-        self.table = [None] * m
+        self.tabla = [None] * m
 
-    def hash_function(self, key):
-        if self.m == 27:
-            return ord(key) - ord('a')
-        elif self.m == 26:
-            return ord(key.lower()) - ord('a')
+    # Función hash
+    def _hash(self, llave):
+        return ord(llave) % self.m
 
-    def insert(self, key, value):
-        index = self.hash_function(key)
-        if self.table[index] is None:
-            self.table[index] = TrieNode(key, value)
+    # Función para Insertar un valor en la tabla
+    def insertar(self, llave, valor):
+        index = self._hash(llave)
+        if self.tabla[index] is None:
+            self.tabla[index] = Nodo(llave, valor)
         else:
-            current_node = self.table[index]
-            while current_node.next_nodes[index] is not None:
-                current_node = current_node.next_nodes[index]
-            current_node.next_nodes[index] = TrieNode(key, value)
+            self.tabla[index].insertar(llave, valor)
 
-    def search(self, key):
-        index = self.hash_function(key)
-        if self.table[index] is None:
-            return None
+    # Función para obtener un valor de la tabla
+    def obtener(self, llave):
+        index = self._hash(llave)
+        if self.tabla[index] is not None:
+            return self.tabla[index].get(llave)
+        return None
+
+# Clase Nodo
+class Nodo:
+
+    # Constructor
+    def __init__(self, llave, valor):
+        self.llave = llave
+        self.valor = valor
+        self.nodosHijos = {}
+
+    # Función para insertar un valor en el nodo
+    def insertar(self, llave, valor):
+        if llave not in self.nodosHijos:
+            self.nodosHijos[llave] = Nodo(llave, valor)
         else:
-            current_node = self.table[index]
-            while current_node is not None:
-                if current_node.key == key:
-                    return current_node.value
-                current_node = current_node.next_nodes[index]
-            return None
+            self.nodosHijos[llave].valor = valor
+
+    # Función para obtener un valor del nodo
+    def get(self, llave):
+        if llave in self.nodosHijos:
+            return self.nodosHijos[llave].valor
+        return None

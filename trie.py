@@ -1,32 +1,29 @@
-class Node:
-    def __init__(self):
-        self.children = {}
-        self.is_end_of_word = False
+from hashtable import HashTable, Nodo
 
+# Clase Trie
 class Trie:
-    def __init__(self):
-        self.root = Node()
+    
+    # Constructor
+    def __init__(self, m):
+        self.raiz = Nodo("", "")
+        self.m = m
+        self.hash_table = HashTable(m)
 
-    def insert(self, word):
-        current = self.root
-        for char in word:
-            if char not in current.children:
-                current.children[char] = Node()
-            current = current.children[char]
-        current.is_end_of_word = True
+    # Función para insertar una palabra en el trie
+    def insertar(self, palabra, traduccion):
+        nodo = self.raiz
+        for char in palabra:
+            if char not in nodo.nodosHijos:
+                nodo.nodosHijos[char] = Nodo(char, "")
+                self.hash_table.insertar(char, nodo.nodosHijos[char])
+            nodo = nodo.nodosHijos[char]
+        nodo.value = traduccion
 
-    def search(self, word):
-        current = self.root
-        for char in word:
-            if char not in current.children:
-                return False
-            current = current.children[char]
-        return current.is_end_of_word
-
-    def starts_with(self, prefix):
-        current = self.root
-        for char in prefix:
-            if char not in current.children:
-                return False
-            current = current.children[char]
-        return True
+    # Función para buscar una palabra en el trie
+    def buscar(self, palabra):
+        nodo = self.raiz
+        for char in palabra:
+            if char not in nodo.nodosHijos:
+                return None
+            nodo = nodo.nodosHijos[char]
+        return nodo.value
