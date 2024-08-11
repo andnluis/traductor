@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, font
 from trie import Trie
 
 class Translator:
@@ -19,43 +19,52 @@ class Translator:
                 self.en_to_es_trie.insertar(en, es)
 
     def create_widgets(self):
+
+        #Declaración de Fuente  
+        fuente_titulo = font.Font(family="Helvetica", size=16, weight="normal") 
+
+         # Create a style for the buttons
+        style = ttk.Style()
+        style.configure("TButton", background="#00aad4", foreground="white")
+
         # Texto original
-        tk.Label(self.master, text="Texto original:").grid(row=0, column=0, padx=10, pady=10, sticky="w")
-        self.original_text_entry = tk.Text(self.master, height=5, width=40)
+        tk.Label(self.master, text="Texto original:", font=fuente_titulo).grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        self.original_text_entry = tk.Text(self.master, height=5, width=60)
         self.original_text_entry.grid(row=1, column=0, padx=10, pady=10)
 
         # Traducción
-        tk.Label(self.master, text="Traducción:").grid(row=0, column=1, padx=10, pady=10, sticky="w")
-        self.translated_text_entry = tk.Text(self.master, height=5, width=40)
-        self.translated_text_entry.grid(row=1, column=1, padx=10, pady=10)
+        tk.Label(self.master, text="Traducción:", font=fuente_titulo).grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.translated_text_entry = tk.Text(self.master, height=5, width=60)
+        self.translated_text_entry.grid(row=3, column=0, padx=10, pady=10)
 
         # Palabras encontradas
-        tk.Label(self.master, text="Palabras encontradas:").grid(row=2, column=0, padx=10, pady=10, sticky="w")
-        self.found_words_listbox = tk.Listbox(self.master, height=10, width=40)
-        self.found_words_listbox.grid(row=3, column=0, padx=10, pady=10)
+        tk.Label(self.master, text="Palabras encontradas:", font=fuente_titulo).grid(row=0, column=1, padx=10, pady=10, sticky="w")
+        self.found_words_listbox = tk.Listbox(self.master, height=5, width=40)
+        self.found_words_listbox.grid(row=1, column=1, padx=5, pady=5)
 
         # Palabras no encontradas
-        tk.Label(self.master, text="Palabras no encontradas:").grid(row=2, column=1, padx=10, pady=10, sticky="w")
-        self.not_found_words_listbox = tk.Listbox(self.master, height=10, width=40)
+        tk.Label(self.master, text="Palabras no encontradas:", font=fuente_titulo).grid(row=2, column=1, padx=10, pady=10, sticky="w")
+        self.not_found_words_listbox = tk.Listbox(self.master, height=5, width=40)
         self.not_found_words_listbox.grid(row=3, column=1, padx=10, pady=10)
 
-        # Botones
-        self.translate_button = ttk.Button(self.master, text="Traducir", command=self.translate)
-        self.translate_button.grid(row=4, column=0, padx=10, pady=10, sticky="e")
+       # Botones
+        self.translate_button = ttk.Button(self.master, text="Traducir", command=self.translate, style="TButton")
+        self.translate_button.grid(row=4, column=0, padx=10, pady=10, sticky="w")
 
         self.clear_button = ttk.Button(self.master, text="Limpiar", command=self.limpiar)
-        self.clear_button.grid(row=4, column=1, padx=10, pady=10, sticky="w")
+        self.clear_button.grid(row=4, column=0, padx=10, pady=10, sticky="e")
 
         # Tipo de traducción
-        tk.Label(self.master, text="Tipo de traducción:").grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        tk.Label(self.master, text="Tipo de traducción:").grid(row=4, column=1, padx=10, pady=10, sticky="w")
         self.translation_type = tk.StringVar(value="es-en")
-        tk.Radiobutton(self.master, text="Español a inglés", variable=self.translation_type, value="es-en").grid(row=6, column=0, padx=10, pady=2, sticky="w")
-        tk.Radiobutton(self.master, text="Inglés a español", variable=self.translation_type, value="en-es").grid(row=7, column=0, padx=10, pady=2, sticky="w")
+        tk.Radiobutton(self.master, text="Español a inglés", variable=self.translation_type, value="es-en").grid(row=5, column=1, padx=10, pady=2, sticky="w")
+        tk.Radiobutton(self.master, text="Inglés a español", variable=self.translation_type, value="en-es").grid(row=6, column=1, padx=10, pady=2, sticky="w")
 
         # Agregar nueva palabra al diccionario
         self.add_word_label = tk.Label(self.master, text="+ Agregar una nueva palabra al diccionario", fg="blue", cursor="hand2")
-        self.add_word_label.grid(row=8, column=0, padx=10, pady=10, sticky="w")
+        self.add_word_label.grid(row=6, column=0, padx=10, pady=10, sticky="w")
         self.add_word_label.bind("<Button-1>", self.agregar_palabra)
+
 
     def translate(self):
         original_text = self.original_text_entry.get("1.0", tk.END).strip()
