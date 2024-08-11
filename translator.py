@@ -136,4 +136,3 @@ class Translator:
 root = tk.Tk()
 translator = Translator(root)
 root.mainloop()
-
