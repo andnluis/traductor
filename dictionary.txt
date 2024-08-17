@@ -18584,3 +18584,6 @@ zurrar : to snarl
 zurriagar : scourge, whips
 zurriago : bullwhip, whip
 zurrir : to whirhablador
+noborracho : teatottler
+día : day
+buen : good

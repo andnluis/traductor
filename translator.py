@@ -9,7 +9,7 @@ class Translator:
         self.es_to_en_trie = Trie(27)
         self.en_to_es_trie = Trie(26)
         self.cargarDiccionario()
-        self.create_widgets()
+        self.crear_widgets()
 
     def cargarDiccionario(self):
         with open("dictionary.txt", "r") as f:
@@ -18,7 +18,7 @@ class Translator:
                 self.es_to_en_trie.insertar(es, en)
                 self.en_to_es_trie.insertar(en, es)
 
-    def create_widgets(self):
+    def crear_widgets(self):
 
         #Declaración de Fuente  
         fuente_titulo = font.Font(family="Helvetica", size=16, weight="normal") 
@@ -29,26 +29,26 @@ class Translator:
 
         # Texto original
         tk.Label(self.master, text="Texto original:", font=fuente_titulo).grid(row=0, column=0, padx=10, pady=10, sticky="w")
-        self.original_text_entry = tk.Text(self.master, height=5, width=60)
-        self.original_text_entry.grid(row=1, column=0, padx=10, pady=10)
+        self.entrada_text_original = tk.Text(self.master, height=5, width=60)
+        self.entrada_text_original.grid(row=1, column=0, padx=10, pady=10)
 
         # Traducción
         tk.Label(self.master, text="Traducción:", font=fuente_titulo).grid(row=2, column=0, padx=10, pady=10, sticky="w")
-        self.translated_text_entry = tk.Text(self.master, height=5, width=60)
-        self.translated_text_entry.grid(row=3, column=0, padx=10, pady=10)
+        self.entrada_texto_traducida = tk.Text(self.master, height=5, width=60)
+        self.entrada_texto_traducida.grid(row=3, column=0, padx=10, pady=10)
 
         # Palabras encontradas
         tk.Label(self.master, text="Palabras encontradas:", font=fuente_titulo).grid(row=0, column=1, padx=10, pady=10, sticky="w")
-        self.found_words_listbox = tk.Listbox(self.master, height=5, width=40)
-        self.found_words_listbox.grid(row=1, column=1, padx=5, pady=5)
+        self.lista_palabras_encontradas = tk.Listbox(self.master, height=5, width=40)
+        self.lista_palabras_encontradas.grid(row=1, column=1, padx=5, pady=5)
 
         # Palabras no encontradas
         tk.Label(self.master, text="Palabras no encontradas:", font=fuente_titulo).grid(row=2, column=1, padx=10, pady=10, sticky="w")
-        self.not_found_words_listbox = tk.Listbox(self.master, height=5, width=40)
-        self.not_found_words_listbox.grid(row=3, column=1, padx=10, pady=10)
+        self.lista_palabras_no_encontradas = tk.Listbox(self.master, height=5, width=40)
+        self.lista_palabras_no_encontradas.grid(row=3, column=1, padx=10, pady=10)
 
        # Botones
-        self.translate_button = ttk.Button(self.master, text="Traducir", command=self.translate, style="TButton")
+        self.translate_button = ttk.Button(self.master, text="Traducir", command=self.traducir, style="TButton")
         self.translate_button.grid(row=4, column=0, padx=10, pady=10, sticky="w")
 
         self.clear_button = ttk.Button(self.master, text="Limpiar", command=self.limpiar)
@@ -66,44 +66,45 @@ class Translator:
         self.add_word_label.bind("<Button-1>", self.agregar_palabra)
 
 
-    def translate(self):
-        original_text = self.original_text_entry.get("1.0", tk.END).strip()
-        self.translated_text_entry.delete("1.0", tk.END)
-        self.found_words_listbox.delete(0, tk.END)
-        self.not_found_words_listbox.delete(0, tk.END)
+    def traducir(self):
+        texto_original = self.entrada_text_original.get("1.0", tk.END).strip()
+        self.entrada_texto_traducida.delete("1.0", tk.END)
+        self.lista_palabras_encontradas.delete(0, tk.END)
+        self.lista_palabras_no_encontradas.delete(0, tk.END)
 
         if self.translation_type.get() == "es-en":
-            words = original_text.split()
-            translated_words = []
-            for word in words:
-                translation = self.es_to_en_trie.buscar(word)
-                if translation:
-                    translated_words.append(translation)
-                    self.found_words_listbox.insert(tk.END, f"{word}: {translation}")
+            palabras = texto_original.split()
+            palabras_traducidas = []
+            for palabra in palabras:
+                traduccion = self.es_to_en_trie.buscar(palabra)
+                if traduccion:
+                    traducciones = traduccion.split(", ")
+                    palabras_traducidas.append(traducciones[0])
+                    self.lista_palabras_encontradas.insert(tk.END, f"{palabra}: {traduccion}")
                 else:
-                    translated_words.append(word)
-                    self.not_found_words_listbox.insert(tk.END, word)
-            translated_text = " ".join(translated_words)
+                    palabras_traducidas.append(palabra)
+                    self.lista_palabras_no_encontradas.insert(tk.END, palabra)
+            text_traducido = " ".join(palabras_traducidas)
         else:
-            words = original_text.split()
-            translated_words = []
-            for word in words:
-                translation = self.en_to_es_trie.buscar(word)
-                if translation:
-                    translated_words.append(translation)
-                    self.found_words_listbox.insert(tk.END, f"{word}: {translation}")
+            palabras = texto_original.split()
+            palabras_traducidas = []
+            for palabra in palabras:
+                traduccion = self.en_to_es_trie.buscar(palabra)
+                if traduccion:
+                    palabras_traducidas.append(traduccion)
+                    self.lista_palabras_encontradas.insert(tk.END, f"{palabra}: {traduccion}")
                 else:
-                    translated_words.append(word)
-                    self.not_found_words_listbox.insert(tk.END, word)
-            translated_text = " ".join(translated_words)
+                    palabras_traducidas.append(palabra)
+                    self.lista_palabras_no_encontradas.insert(tk.END, palabra)
+            text_traducido = " ".join(palabras_traducidas)
 
-        self.translated_text_entry.insert(tk.END, translated_text)
+        self.entrada_texto_traducida.insert(tk.END, text_traducido)
 
     def limpiar(self):
-        self.original_text_entry.delete("1.0", tk.END)
-        self.translated_text_entry.delete("1.0", tk.END)
-        self.found_words_listbox.delete(0, tk.END)
-        self.not_found_words_listbox.delete(0, tk.END)
+        self.entrada_text_original.delete("1.0", tk.END)
+        self.entrada_texto_traducida.delete("1.0", tk.END)
+        self.lista_palabras_encontradas.delete(0, tk.END)
+        self.lista_palabras_no_encontradas.delete(0, tk.END)
 
     def agregar_palabra(self, event):
         new_window = tk.Toplevel(self.master)
